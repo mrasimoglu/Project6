@@ -1,0 +1,12 @@
+﻿  HUD.cpp
+c:\users\mustafa\documents\visual studio 2017\projects\project6\project6\staticobject.h(5): warning C4091: 'typedef ': ignored on left of 'Shape' when no variable is declared
+c:\users\mustafa\documents\visual studio 2017\projects\project6\project6\gun.h(16): warning C4091: 'extern ': ignored on left of 'Guns' when no variable is declared
+c:\users\mustafa\documents\visual studio 2017\projects\project6\project6\character.h(7): warning C4091: 'typedef ': ignored on left of 'BodyAction' when no variable is declared
+c:\users\mustafa\documents\visual studio 2017\projects\project6\project6\character.h(8): warning C4091: 'typedef ': ignored on left of 'FeetAction' when no variable is declared
+c:\users\mustafa\documents\visual studio 2017\projects\project6\project6\character.h(9): warning C4091: 'typedef ': ignored on left of 'Direction' when no variable is declared
+c:\users\mustafa\documents\visual studio 2017\projects\project6\project6\survivor.h(14): warning C4091: 'typedef ': ignored on left of 'Guns' when no variable is declared
+c:\users\mustafa\documents\visual studio 2017\projects\project6\project6\hud.h(12): warning C4091: 'typedef ': ignored on left of 'OpenedWindow' when no variable is declared
+c:\users\mustafa\documents\visual studio 2017\projects\project6\project6\hud.cpp(70): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\mustafa\documents\visual studio 2017\projects\project6\project6\hud.cpp(74): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\mustafa\documents\visual studio 2017\projects\project6\project6\hud.cpp(99): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  Project6.vcxproj -> C:\Users\Mustafa\documents\visual studio 2017\Projects\Project6\Debug\Project6.exe
