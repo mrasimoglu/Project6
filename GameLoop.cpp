@@ -104,7 +104,7 @@ void GameLoop::Update(float dt)
 	{
 		InitGame();
 	}
-	if (hud->GetWindow() == game)
+	if (hud->GetWindow() == game || hud->GetWindow() == inventory)
 	{
 		if ((survivor->GetPosition().x > camera->GetView().x / 2) && (survivor->GetPosition().x < map->GetSize().x - camera->GetView().x / 2))
 			camera->SetPosition({ survivor->GetPosition().x, camera->GetPosition().y });

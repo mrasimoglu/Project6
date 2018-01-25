@@ -46,13 +46,13 @@ void Survivor::Update(DirectX::Mouse::State state, DirectX::Keyboard::State kb, 
 		SetRotation((atan2(tempX, tempY)) - (PI / 2));
 
 	//Mouse Inputs
-	if (state.leftButton && bodyAction != reload && guns[gun]->Shoot(bodyFrame, map, {(float)state.x, (float)state.y}))
+	if (state.leftButton && bodyAction != reload && bodyAction != meleeattack && guns[gun]->Shoot(bodyFrame, map, {(float)state.x, (float)state.y}))
 	{
 		bodyAction = shoot;
 		sprite[1] = anim->shoot[gun - 2]; 
 		bodyFrame = 0;
 	}
-	if (state.rightButton && bodyAction != reload && bodyAction != meleeattack && bodyAction != shoot)
+	if (state.rightButton && bodyAction != meleeattack && bodyAction != shoot && bodyAction != reload)
 	{
 		bodyAction = meleeattack;
 		sprite[1] = anim->meleeattack[gun];
@@ -164,11 +164,12 @@ void Survivor::Update(DirectX::Mouse::State state, DirectX::Keyboard::State kb, 
 	{
 		if (bodyFrame > (sprite[1]->GetXY().x * sprite[1]->GetXY().y))
 		{
+
 			if(gun != shotgun && bodyAction == reload)
 				map->CreateAmmoClipEmpty((guns[gun]->CalculateRelativePosition() + position) / Vector2(2,2), rand(), device);
 
-			if (gun == shotgun && !state.leftButton && !state.rightButton && !kb.LeftShift && guns[shotgun]->Reload());
-				
+			if (gun == shotgun && bodyAction == reload && !kb.LeftShift && !state.leftButton && !state.rightButton && guns[shotgun]->Reload());
+				//a;
 			else
 				bodyAction = FeetActionToBodyAction(feetAction);
 
@@ -207,14 +208,14 @@ void Survivor::Update(DirectX::Mouse::State state, DirectX::Keyboard::State kb, 
 		if (staticObjects[i] != nullptr)
 		{
 			Vector2 normal = Collision::CheckCollisionT(this, staticObjects[i]);
-			this->SetPosition(this->GetPosition() + (normal));
+			position = position + normal;
 		}
 	}
 
 	StaticObject** groundObjects = map->GetGroundObjects();
 	memset(closestGroundObjects, 0,sizeof(StaticObject*)*(MAX_GROUNDSTATICOBJECTS / 3));
 	int counter = 0;
-	for (int i = 0; i < map->GetMaxStatic(); i++)
+	for (int i = 0; i < map->GetMaxGroundObject(); i++)
 	{
 		if (groundObjects[i] != nullptr)
 		{

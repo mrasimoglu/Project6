@@ -29,6 +29,7 @@ void Map::CreateBox(Vector2 pos, float rot, ID3D11Device* device)
 		i++;
 
 	statics[i] = new StaticObject(device, L"img/map/box.dds", pos, rot, rectangle);
+	statics[i]->CalculateVertex();
 }
 
 void Map::CreateBarrel(Vector2 pos, float rot, ID3D11Device * device)
@@ -126,7 +127,7 @@ void Map::InitMap(ID3D11Device* device)
 {
 	this->device = device;
 
-	CreateBarrel(Vector2(550, 250), 0.0f, device);
+	CreateBarrel(Vector2(150, 250), 0.0f, device);
 	CreateBox(Vector2(850, 600), 0, device);
 	CreateAmmoClipFull(Vector2(100, 100), 0, device);
 }
