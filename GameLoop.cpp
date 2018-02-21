@@ -19,6 +19,7 @@ GameLoop::GameLoop(HINSTANCE hInstance) : DXApp(hInstance)
 
 bool GameLoop::Init()
 {
+	clockk = clock();
 	isPressedESC = false;
 	isPressedTAB = false;
 
@@ -26,12 +27,6 @@ bool GameLoop::Init()
 
 	if (!DXApp::Init())
 		return false;
-
-	//Craete spritebatch
-	spriteBatch = new SpriteBatch(m_pImmidiateContext);
-
-	//Create spritefont
-	spriteFont = new SpriteFont(m_pDevice, L"fonts/Verdana.spriteFont");
 
 	//Mouse and keyboard
 	m_keyboard = std::make_unique<Keyboard>();
@@ -54,7 +49,14 @@ bool GameLoop::InitGame()
 	hud->SetSurvivor(survivor);
 
 	map = new Map({2000, 1000});
-	map->InitMap(m_pDevice);
+	map->InitMap(m_pDevice, camera);
+
+	navMesh = new NavMesh(map->GetStaticObjects());
+
+	for (int i = 0; i < 1; i++)
+	{
+		zombies[i] = new Zombie(DXApp::m_pDevice, camera, Vector2(/*rand() % m_ClientWidth, rand() % m_ClientHeight*/1000, 600));
+	}
 
 	hud->SetWindow(game);
 
@@ -63,7 +65,6 @@ bool GameLoop::InitGame()
 
 GameLoop::~GameLoop()
 {
-	
 }
 
 void GameLoop::Update(float dt)
@@ -71,8 +72,8 @@ void GameLoop::Update(float dt)
 	GameLoop::deltaTime = std::chrono::high_resolution_clock::now() - GameLoop::oldTime;
 	GameLoop::oldTime = std::chrono::high_resolution_clock::now();
 
-	DirectX::Mouse::State state = m_mouse->GetState();
-	tracker.Update(state);
+	DXApp::mouse = m_mouse->GetState();
+	tracker.Update(DXApp::mouse);
 
 	auto kb = m_keyboard->GetState();
 
@@ -98,40 +99,106 @@ void GameLoop::Update(float dt)
 	isPressedESC = kb.Escape;
 	isPressedTAB = kb.Tab;
 
-	hud->Update(state, kb);
-
 	if (hud->GetWindow() == loading)
 	{
 		InitGame();
 	}
-	if (hud->GetWindow() == game || hud->GetWindow() == inventory)
+	if (hud->GetWindow() == game)
 	{
 		if ((survivor->GetPosition().x > camera->GetView().x / 2) && (survivor->GetPosition().x < map->GetSize().x - camera->GetView().x / 2))
 			camera->SetPosition({ survivor->GetPosition().x, camera->GetPosition().y });
 		if ((survivor->GetPosition().y > camera->GetView().y / 2) && (survivor->GetPosition().y < map->GetSize().y - camera->GetView().y / 2))
 			camera->SetPosition({ camera->GetPosition().x ,survivor->GetPosition().y });
 
-		survivor->Update(state, kb, map);
-		map->UpdateMap(state);
+		survivor->Update(DXApp::mouse, kb, map, zombies);
+		map->UpdateMap(DXApp::mouse);
+												
+		for (int i = 0; i < 10; i++)
+			if (zombies[i] != nullptr)
+				zombies[i]->Update(map, survivor, zombies);
 	}
+
+	hud->Update(DXApp::mouse, kb, map);
 }
 
 void GameLoop::Render(float dt)
 {
+	if (clockk + 1000 < clock())
+	{
+		printf("FPS : %d\n", counter);
+		clockk = clock();
+		counter = 0;
+	}
+
 	m_pImmidiateContext->ClearRenderTargetView(m_pRenderTargetView, DirectX::Colors::DimGray);
 
-	spriteBatch->Begin();
+	DXApp::spriteBatch->Begin();
 
 	if (hud->GetWindow() == game || hud->GetWindow() == inventory)
 	{
-		map->DrawMap(spriteBatch, spriteFont, camera);
+		map->DrawGroundObjects();
 
-		survivor->Draw(spriteBatch, camera);
+		survivor->Draw(DXApp::spriteBatch);
+
+		for (int i = 0; i < 10; i++)
+		{
+			if (zombies[i] != nullptr)
+				if (Collision::Trace66(zombies[i], survivor->GetPosition(), map->GetStaticObjects(), camera))
+					zombies[i]->Draw(DXApp::spriteBatch);
+		}
+
+		map->DrawFinites();
 	}
 
-	hud->Draw(spriteBatch, spriteFont);
+	DXApp::spriteBatch->End();
 
-	spriteBatch->End();
+	CommonStates states(m_pDevice);
+	m_pImmidiateContext->OMSetBlendState(states.Opaque(), nullptr, 0xFFFFFFFF);
+	m_pImmidiateContext->OMSetDepthStencilState(states.DepthNone(), 0);
+	m_pImmidiateContext->RSSetState(states.CullNone());
+	basicEffect->Apply(m_pImmidiateContext);
+	m_pImmidiateContext->IASetInputLayout(inputLayout.Get());
+	primitiveBatch->Begin();
+
+	/*auto kb = m_keyboard->GetState();*/
+
+	if ((hud->GetWindow() == game || hud->GetWindow() == inventory)/* && kb.T*/)
+	{
+		Collision::DrawRay(primitiveBatch, map->GetStaticObjects(), Vector2(survivor->GetPosition()), camera);
+	}
+
+	m_pImmidiateContext->Flush();
+	primitiveBatch->End();
+
+	//
+	DXApp::spriteBatch->Begin();
+
+	if (hud->GetWindow() == game || hud->GetWindow() == inventory)
+	{
+		map->DrawStatics();
+		navMesh->DrawNodes();
+	}
+
+	hud->Draw(DXApp::spriteBatch, DXApp::spriteFont);
+
+	DXApp::spriteBatch->End();
+
+
+	m_pImmidiateContext->OMSetBlendState(states.Opaque(), nullptr, 0xFFFFFFFF);
+	m_pImmidiateContext->OMSetDepthStencilState(states.DepthNone(), 0);
+	m_pImmidiateContext->RSSetState(states.CullNone());
+	basicEffect->Apply(m_pImmidiateContext);
+	m_pImmidiateContext->IASetInputLayout(inputLayout.Get());
+	primitiveBatch->Begin();
+
+	if (hud->GetWindow() == game)
+	{
+		navMesh->DrawLinks(primitiveBatch);
+	}
+
+	m_pImmidiateContext->Flush();
+	primitiveBatch->End();
 
 	HR(m_pSwapChain->Present(0, 0));
+	counter++;
 }

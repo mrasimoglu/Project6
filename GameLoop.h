@@ -1,23 +1,29 @@
+#ifndef GAMELOOP_H
+#define GAMELOOP_H
+
 #pragma once
 
 #include "DXApp.h"
 #include <d3d11.h>
-#include "SpriteBatch.h"
 #include "SimpleMath.h"
 #include "DDSTextureLoader.h"
-#include "SpriteFont.h"
 #include "Mouse.h"
 #include "Keyboard.h"
 
-#include "Survivor.h"
 #include "HUD.h"
 #include "Map.h"
 #include "Camera.h"
+#include "Zombie.h"
+#include "NavMesh.h"
 
 #include <time.h>
 #include <chrono>
 
 using namespace DirectX;
+class Item;
+class Survivor;
+class HUD;
+
 
 class GameLoop : public DXApp
 {
@@ -34,10 +40,10 @@ public:
 	void Render(float dt) override;
 
 private:
-	SpriteBatch* spriteBatch;
-	SpriteFont* spriteFont;
 
 	clock_t timer;
+	clock_t clockk;
+	int counter;
 	bool isPressedESC;
 	bool isPressedTAB;
 
@@ -45,8 +51,12 @@ private:
 	HUD* hud;
 	Map* map;
 	Camera* camera;
+	Zombie* zombies[10];
+	NavMesh* navMesh;
 
 	std::unique_ptr<Keyboard> m_keyboard;
 	std::unique_ptr<DirectX::Mouse> m_mouse;
 	Mouse::ButtonStateTracker tracker;
 };
+
+#endif

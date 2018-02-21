@@ -1,3 +1,5 @@
+#ifndef HUD_H
+#define HUD_H
 #pragma once
 
 
@@ -9,12 +11,25 @@
 #include "Survivor.h"
 #include "Button.h"
 
-typedef enum OpenedWindow {mainmenu, loading, menu, game, inventory};
+enum OpenedWindow {mainmenu, loading, menu, game, inventory};
+
+class Survivor;
 
 class HUD
 {
 private:
+	Item* holdedItem;
+
 	Survivor* player;
+
+	SpriteSheet* menuScript;
+	SpriteSheet* inventoryScript;
+
+	SpriteSheet* inventoryBg;
+	SpriteSheet* itemBox;
+
+	int invRow;
+	int invCol;
 
 	OpenedWindow window;
 
@@ -23,18 +38,25 @@ private:
 
 	SpriteSheet* cursor;
 
-	SpriteSheet* guns;
+	SpriteSheet* guns[4];
 	SpriteSheet* guns_pointer;
 
 	SpriteSheet* ammo;
 	wchar_t ammo_info[10];
 
+	
+	clock_t prevTime;
+	bool canPress;
+
 	Button* startButton;
 
 	int frame;
+
+	void DrawInventory(SpriteBatch* spriteBatch, SpriteFont* spriteFont);
+		
 public:
 	void Draw(SpriteBatch*, SpriteFont*);
-	void Update(DirectX::Mouse::State, DirectX::Keyboard::State);
+	void Update(DirectX::Mouse::State, DirectX::Keyboard::State, Map*);
 	void SetSurvivor(Survivor*);
 
 	OpenedWindow GetWindow();
@@ -44,3 +66,4 @@ public:
 	~HUD();
 };
 
+#endif

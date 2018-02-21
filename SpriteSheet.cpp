@@ -78,6 +78,11 @@ void SpriteSheet::Draw(DirectX::SpriteBatch *spriteBatch)
 	spriteBatch->Draw(m_pTexture, m_Position, &m_SourceRect, m_Tint, m_Rotation, m_Origin, m_Scale, DirectX::SpriteEffects::SpriteEffects_None, 0.0f);
 }
 
+void SpriteSheet::Draw()
+{
+	DXApp::spriteBatch->Draw(m_pTexture, m_Position, &m_SourceRect, m_Tint, m_Rotation, m_Origin, m_Scale, DirectX::SpriteEffects::SpriteEffects_None, 0.0f);
+}
+
 void SpriteSheet::Draw(DirectX::SpriteBatch *spriteBatch, Camera* cam)
 {
 	spriteBatch->Draw(m_pTexture, m_Position - cam->GetOffset(), &m_SourceRect, m_Tint, m_Rotation, m_Origin, m_Scale, DirectX::SpriteEffects::SpriteEffects_None, 0.0f);

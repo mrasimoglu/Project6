@@ -133,11 +133,16 @@
     <ClInclude Include="GameLoop.h" />
     <ClInclude Include="Gun.h" />
     <ClInclude Include="HUD.h" />
+    <ClInclude Include="InfoBox.h" />
+    <ClInclude Include="Inventory.h" />
+    <ClInclude Include="Item.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Mustafa.h" />
+    <ClInclude Include="NavMesh.h" />
     <ClInclude Include="SpriteSheet.h" />
     <ClInclude Include="StaticObject.h" />
     <ClInclude Include="Survivor.h" />
+    <ClInclude Include="Zombie.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Project5\Project5\DXERR\dxerr.cpp" />
@@ -152,12 +157,17 @@
     <ClCompile Include="GameLoop.cpp" />
     <ClCompile Include="Gun.cpp" />
     <ClCompile Include="HUD.cpp" />
+    <ClCompile Include="InfoBox.cpp" />
+    <ClCompile Include="Inventory.cpp" />
+    <ClCompile Include="Item.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Mustafa.cpp" />
+    <ClCompile Include="NavMesh.cpp" />
     <ClCompile Include="SpriteSheet.cpp" />
     <ClCompile Include="StaticObject.cpp" />
     <ClCompile Include="Survivor.cpp" />
     <ClCompile Include="winmain.cpp" />
+    <ClCompile Include="Zombie.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

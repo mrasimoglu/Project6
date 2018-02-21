@@ -2,11 +2,20 @@
 
 #include "Mustafa.h"
 
-StaticObject::StaticObject(ID3D11Device* device, wchar_t *path, Vector2 pos, float rot, Shape shape)
+StaticObject::StaticObject()
 {
+}
+
+StaticObject::StaticObject(wchar_t *path, Vector2 pos, float rot, Shape shape, Camera* cam)
+{
+	this->camera = cam;
+
 	numOfSprites = 1;
+	
+	sprite = (SpriteSheet**)malloc(numOfSprites * sizeof(SpriteSheet));
+	
 	sprite[0] = new SpriteSheet(pos);
-	sprite[0]->Load(device, path);
+	sprite[0]->Load(DXApp::m_pDevice, path);
 	sprite[0]->SetRotation(rot);
 	sprite[0]->SetScale(Vector2(0.25f, 0.25f));
 

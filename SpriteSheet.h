@@ -1,3 +1,6 @@
+#ifndef SPRITESHEET_H
+#define SPRITESHEET_H
+
 #pragma once
 
 #include <d3d11.h>
@@ -8,6 +11,8 @@
 #include "SpriteBatch.h"
 
 #include "Camera.h"
+
+#include "DXApp.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -53,6 +58,7 @@ public:
 	//DRAW
 	void Draw(SpriteBatch* spriteBatch, Camera*);
 	void Draw(SpriteBatch* spriteBatch);
+	void Draw();
 	void DrawString(SpriteFont* spriteFont, SpriteBatch* spriteBatch, const wchar_t *, Color);
 	void DrawString(SpriteFont* spriteFont, SpriteBatch* spriteBatch, const wchar_t *);
 
@@ -75,3 +81,5 @@ protected:
 
 	int x, y;
 };
+
+#endif

@@ -1,10 +1,27 @@
 #pragma once
 
+#pragma comment(lib, "d2d1")
+
+#include <wrl.h>
+
 #include <d3d11.h>
+#include <D2d1.h>
+#include "SpriteBatch.h"
+#include "SpriteFont.h"
+#include "PrimitiveBatch.h"
+
+#include "Mouse.h"
+
+#include "CommonStates.h"
+#include "Effects.h"
+#include "VertexTypes.h"
+
 #include <windows.h>
 #include <string>
 
 #include "DXUtil.h"
+
+using namespace DirectX;
 
 #define WIN_32_LEAN_AND_MEAN
 
@@ -24,6 +41,14 @@ public:
 	virtual LRESULT MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 	static ID3D11Device*				m_pDevice;
+	static SpriteFont*					spriteFont;
+	static SpriteBatch*					spriteBatch;
+	static DirectX::Mouse::State		mouse;
+
+	PrimitiveBatch<VertexPositionColor>* primitiveBatch;
+
+	std::unique_ptr<BasicEffect> basicEffect;
+	Microsoft::WRL::ComPtr<ID3D11InputLayout> inputLayout;
 
 protected:
 	//WIN32 ATTRIBUTES

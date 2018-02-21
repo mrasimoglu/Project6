@@ -1,16 +1,19 @@
+#ifndef STATICOBJECT_H
+#define STATICOBJECT_H
 #pragma once
 
 #include "Entity.h"
-
-typedef enum Shape {circle, rectangle};
+#include "DXApp.h"
 
 class StaticObject : public Entity
 {
-private:
-	Shape shape;
+protected:
 public:
-	StaticObject(ID3D11Device* device, wchar_t *path, Vector2 pos, float rot, Shape);
+	StaticObject();
+	StaticObject(wchar_t *path, Vector2 pos, float rot, Shape, Camera*);
 	~StaticObject();
 
 	void CalculateVertex();
 };
+
+#endif

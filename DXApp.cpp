@@ -1,3 +1,4 @@
+
 #include "DXApp.h"
 #include "DXUtil.h"
 
@@ -9,6 +10,9 @@
 #include <time.h>
 
 ID3D11Device* DXApp::m_pDevice;
+SpriteFont* DXApp::spriteFont;
+SpriteBatch* DXApp::spriteBatch;
+DirectX::Mouse::State DXApp::mouse;
 
 using namespace DirectX;
 namespace
@@ -204,18 +208,50 @@ bool DXApp::InitDirect3D()
 	m_Viewport.MaxDepth = 1.0f;
 
 	//BIND VIEWPORT
-	m_pImmidiateContext->RSSetViewports(1, &m_Viewport);
+	m_pImmidiateContext->RSSetViewports(1, &m_Viewport);	
+
+	//Craete spritebatch
+	spriteBatch = new SpriteBatch(m_pImmidiateContext);
+
+	//Create spritefont
+	spriteFont = new SpriteFont(m_pDevice, L"fonts/Verdana.spriteFont");
+
+	//
+	primitiveBatch = new PrimitiveBatch<VertexPositionColor>(m_pImmidiateContext);
+
+	basicEffect = std::make_unique<BasicEffect>(m_pDevice);
+
+	basicEffect->SetProjection(XMMatrixOrthographicOffCenterRH(0,
+		m_ClientWidth, m_ClientHeight, 0, 0, 1));
+	basicEffect->SetVertexColorEnabled(true);
+
+	void const* shaderByteCode;
+	size_t byteCodeLength;
+
+	basicEffect->GetVertexShaderBytecode(&shaderByteCode, &byteCodeLength);
+
+	m_pDevice->CreateInputLayout(VertexPositionColor::InputElements,
+		VertexPositionColor::InputElementCount,
+		shaderByteCode, byteCodeLength,
+		inputLayout.GetAddressOf());
 
 	return true;
 }
 
 LRESULT DXApp::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	PAINTSTRUCT ps;
+	HDC hdc;
+
 	switch (msg)
 	{
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		return 0;
+	case WM_PAINT:
+		hdc = BeginPaint(m_hAppWnd, &ps);
+		EndPaint(m_hAppWnd, &ps);
+		break;
 	case WM_INPUT:
 	case WM_MOUSEMOVE:
 	case WM_LBUTTONDOWN:

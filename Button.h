@@ -13,14 +13,15 @@ class Button
 {
 private:
 	SpriteSheet* sprite;
+	wchar_t* text;
 
 	Vector2 position;
 	float rotation;
 public:
-	Button(ID3D11Device* device, wchar_t *path, Vector2 pos, float rot);
+	Button(ID3D11Device* device, wchar_t *path, wchar_t* text, Vector2 pos, float rot);
 	~Button();
 
-	void Draw(SpriteBatch* spriteBatch);
+	void Draw(SpriteBatch* spriteBatch, SpriteFont*);
 	bool isPressed(DirectX::Mouse::State state);
 	bool isOver(DirectX::Mouse::State state);
 	void Maximize();

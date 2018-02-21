@@ -2,15 +2,23 @@
 
 
 
-Button::Button(ID3D11Device* device, wchar_t *path, Vector2 pos, float rot)
+Button::Button(ID3D11Device* device, wchar_t *path, wchar_t* text, Vector2 pos, float rot)
 {
 	sprite = new SpriteSheet(pos, rot);
 	sprite->Load(device, path);
+
+	position = pos;
+	rotation = rot;
+
+	this->text = text;
 }
 
-void Button::Draw(SpriteBatch* spriteBatch)
+void Button::Draw(SpriteBatch* spriteBatch, SpriteFont* spriteFont)
 {
+	Vector2 textLen = spriteFont->MeasureString(text) / 2.f;
 	sprite->Draw(spriteBatch);
+	
+	spriteFont->DrawString(spriteBatch, this->text, position, DirectX::Colors::White, rotation, textLen, sprite->GetScale() * 4,  DirectX::SpriteEffects::SpriteEffects_None, 0.0f);
 }
 
 bool Button::isPressed(DirectX::Mouse::State state)
